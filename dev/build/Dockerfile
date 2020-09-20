@@ -1,9 +1,19 @@
+# vim:set ft=dockerfile:
+ARG BASE_IMAGE=node:14.11.0-buster-slim
+
 # ====================
 # --- Build Assets ---
 # ====================
-FROM node:14-alpine AS assets
+FROM ${BASE_IMAGE} AS assets
 
-RUN apk add yarn g++ make python --no-cache
+RUN set -ex; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        g++ \
+        make \
+        python3 \
+    ; \
+    rm -rf /var/lib/apt/lists/*;
 
 WORKDIR /wiki
 
@@ -23,11 +33,21 @@ RUN yarn --production --frozen-lockfile --non-interactive
 # ===============
 # --- Release ---
 # ===============
-FROM node:14-alpine
-LABEL maintainer="requarks.io"
+FROM ${BASE_IMAGE}
 
-RUN apk add bash curl git openssh gnupg sqlite --no-cache && \
-    mkdir -p /wiki && \
+RUN set -ex; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends \
+        bash \
+        curl \
+        git \
+        openssh-client \
+        ca-certificates \
+        gnupg \
+    ; \
+    rm -rf /var/lib/apt/lists/*;
+
+RUN mkdir -p /wiki && \
     mkdir -p /logs && \
     mkdir -p /wiki/data/content && \
     chown -R node:node /wiki /logs
@@ -49,6 +69,6 @@ VOLUME ["/wiki/data/content"]
 EXPOSE 3000
 EXPOSE 3443
 
-# HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=3 CMD curl -f http://localhost:3000/healthz
+HEALTHCHECK --interval=30s --timeout=30s --start-period=30s --retries=3 CMD curl -f http://localhost:3000/healthz
 
 CMD ["node", "server"]
