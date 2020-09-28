@@ -1,0 +1,12 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/Requarks/wiki-localization.git
+	branch = master
+	commit = ed7008a85c4631b1925db7d69b7e7d64b4f0bd54
+	parent = f0bfdd95a54c927d33ea526bca07825b6b3f71a6
+	method = merge
+	cmdver = 0.4.1
