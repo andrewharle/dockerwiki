@@ -1,20 +1,14 @@
-- name: Delete Package Versions
-  uses: actions/delete-package-versions@v1.0.3
-  with:
-    # Comma separated string of package version ids to delete.
-    package-version-ids: build-cache-no-buildkit
-    # Owner of the repo containing the package version to delete. Defaults to the owner of the repo running the action.
+name: Delete Package
 
-    owner: # optional
-    # Repo containing the package version to delete. Defaults to the repo running the action.
+on:
+  workflow_dispatch:
 
-    repo: # optional
-    # Name of the package containing the version to delete. Required if dynamically deleting oldest versions.
-
-    package-name: # optional
-    # Number of versions to delete starting with the oldest version. Defaults to 1.
-
-    num-old-versions-to-delete: # optional, default is 1
-    # Token with the necessary scopes to delete package versions. If num-old-versions-to-delete is used the token also needs the read packages scope. Defaults to github.token scoped to the repo running the action. To delete package versions of a package outside the repo the action is running in use a Personal Access Token stored as a secret.
-
-    token: # optional, default is ${{ github.token }}
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Delete Package Versions
+        uses: actions/delete-package-versions@v1.0.3
+        with:
+          package-name: build-cache-no-buildkit
